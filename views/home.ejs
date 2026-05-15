@@ -20,8 +20,30 @@
                     <button type="submit">Genrate</button>
                 </form>
             </div>
-
               <br>
+
+               <% if (urls && urls.length > 0) { %>
+        <table>
+            <thead>
+                <tr>
+                    <th>S.No.</th>
+                    <th>Short ID</th>
+                    <th>Redirect URL</th>
+                    <th>Clicks</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% urls.forEach((url, index) => { %>
+                    <tr>
+                        <td><%= index + 1 %></td>
+                        <td><%= url.shortID %></td>
+                        <td><%= url.redirectURL %></td>
+                        <td><%= url.visitHistory.length %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    <% } %>
 
 
 </body>
