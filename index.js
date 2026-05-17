@@ -5,6 +5,7 @@ const URL=require('./model/url')
 
 const urlRoute =require("./routes/url");
 const staticRoute=require('./routes/staticRouter');
+const userRoute=require('./routes/user');
 
 const app=express();
 PORT=8001;
@@ -25,5 +26,6 @@ app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 app.use("/url", urlRoute);
 app.use('/', staticRoute);
+app.use('/user', userRoute);
 
 app.listen(PORT,()=>{console.log(`Server is Running on PORT ${PORT} !`)})
