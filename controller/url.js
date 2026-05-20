@@ -2,46 +2,43 @@ const URL = require('../model/url');
 const shortid = require('shortid');
 
 async function handleGenerateNewShortURL(req,res) {
-
     const body = req.body;
-
     if(!body.url){
         return res.status(400).json({error:"url is required"});
     }
-
     const shortID = shortid.generate();
-
     await URL.create({
         shortID: shortID,
         redirectURL: body.url,
         visitHistory: [],
+        createdBy:req.user._id,
     });
-    return res.redirect(`/?id=${shortID}`);
-    // return res.render('home', {
-    //     id:shortID,
-    // });
+    // return res.redirect(`/?id=${shortID}`);
+    return res.render('home', {
+        id:shortID,
+    });
     // return res.json({id: shortID});
 }
 
-async function handelredirect(req,res)
-{
-    const shortID = req.params.shortID;
+// async function handelredirect(req,res)
+// {
+//     const shortID = req.params.shortID;
 
-    const entry = await URL.findOneAndUpdate(
-        {
-            shortID,
-        },
-        {
-            $push:{
-                visitHistory:{
-                    timestamp: Date.now(),
-                }
-            }
-        }
-    );
+//     const entry = await URL.findOneAndUpdate(
+//         {
+//             shortID,
+//         },
+//         {
+//             $push:{
+//                 visitHistory:{
+//                     timestamp: Date.now(),
+//                 }
+//             }
+//         }
+//     );
 
-    res.redirect(entry.redirectURL);
-}
+//     res.redirect(entry.redirectURL);
+// }
 
 async function handleAnalytics(req,res) {
     const shortID =req.params.shortID;
@@ -52,4 +49,4 @@ async function handleAnalytics(req,res) {
     });
 }
 
-module.exports = { handleGenerateNewShortURL,handelredirect,handleAnalytics };
+module.exports = { handleGenerateNewShortURL,handleAnalytics };
