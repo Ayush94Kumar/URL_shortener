@@ -14,31 +14,33 @@ async function handleGenerateNewShortURL(req,res) {
         createdBy:req.user._id,
     });
     // return res.redirect(`/?id=${shortID}`);
+    const allUrls = await URL.find({ createdBy: req.user._id });
     return res.render('home', {
         id:shortID,
+        urls: allUrls
     });
     // return res.json({id: shortID});
 }
 
-// async function handelredirect(req,res)
-// {
-//     const shortID = req.params.shortID;
+async function handelredirect(req,res)
+{
+    const shortID = req.params.shortID;
 
-//     const entry = await URL.findOneAndUpdate(
-//         {
-//             shortID,
-//         },
-//         {
-//             $push:{
-//                 visitHistory:{
-//                     timestamp: Date.now(),
-//                 }
-//             }
-//         }
-//     );
+    const entry = await URL.findOneAndUpdate(
+        {
+            shortID,
+        },
+        {
+            $push:{
+                visitHistory:{
+                    timestamp: Date.now(),
+                }
+            }
+        }
+    );
 
-//     res.redirect(entry.redirectURL);
-// }
+    res.redirect(entry.redirectURL);
+}
 
 async function handleAnalytics(req,res) {
     const shortID =req.params.shortID;
@@ -49,4 +51,4 @@ async function handleAnalytics(req,res) {
     });
 }
 
-module.exports = { handleGenerateNewShortURL,handleAnalytics };
+module.exports = { handleGenerateNewShortURL,handleAnalytics,handelredirect };

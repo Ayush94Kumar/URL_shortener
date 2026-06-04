@@ -4,17 +4,24 @@ const User = require("../model/user");
 const { setUser } = require('../service/auth');
 
 async function handleUserSignup(req, res) {
-    const { name, email, password } = req.body;
+    try {
+        const { name, email, password } = req.body;
+        await User.create({
+            name,
+            email,
+            password,
+        });
+        return res.redirect("/");
 
-    await User.create({
-        name,
-        email,
-        password,
-    });
+    } catch (error) {
+        if(error.code==11000){
+            return res.status(400).json({
+                error:"A user with this email already exists!"
+            })
+        }
 
-    return res.redirect("/");
+    }
 }
-
 async function handleUserLogin(req, res) {
     const { email, password } = req.body;
 
@@ -25,12 +32,10 @@ async function handleUserLogin(req, res) {
             error: "Invalid username and password",
         });
 
-    const sessionId = uuidv4();
+   // const sessionId = uuidv4();
 
-    setUser(sessionId, user);
-
-    res.cookie("uid", sessionId);
-
+   const token = setUser(user);
+    res.cookie("uid", token);
     return res.redirect("/");
 }
 
