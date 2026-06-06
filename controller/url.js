@@ -38,6 +38,10 @@ async function handelredirect(req,res)
             }
         }
     );
+    if(!entry)
+    {
+        return res.status(404).send("Short URL not found");
+    }
 
     res.redirect(entry.redirectURL);
 }
